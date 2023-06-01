@@ -40,8 +40,8 @@ THIRD_PARTY_APPS = [
 ]
 
 MY_APPS = [
-
-
+    'accounts',
+    'hotel'
 ]
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-]+ THIRD_PARTY_APPS + MY_APPS
+] + THIRD_PARTY_APPS + MY_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -183,3 +183,8 @@ EMAIL_PORT = 587  # Укажите порт SMTP-сервера
 EMAIL_USE_TLS = True  # Используйте ли TLS для безопасного соединения
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Укажите ваш адрес электронной почты
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # Укажите ваш пароль от почты
+
+AUTH_USER_MODEL = 'accounts.User'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
