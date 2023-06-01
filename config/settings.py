@@ -40,8 +40,8 @@ THIRD_PARTY_APPS = [
 ]
 
 MY_APPS = [
-    'accounts',
-    'hotel'
+    'apps.accounts',
+    'apps.hotel'
 ]
 INSTALLED_APPS = [
     'django.contrib.admin',
