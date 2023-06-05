@@ -1,13 +1,13 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from .views import HotelViewSet, RoomViewSet, RoomTypeViewSet
+from django.urls import path
 
-router = DefaultRouter()
-router.register(r'hotels', HotelViewSet)
-router.register(r'rooms', RoomViewSet)
-router.register(r'roomtypes', RoomTypeViewSet)
+from . import views
 
 
 urlpatterns = [
-    path('', include(router.urls)),
-]
+    path("hotel/", views.HotelListView.as_view()),
+    path("hotel/<int:pk>/", views.HotelDetailView.as_view()),
+    path("review/", views.ReviewCreateView.as_view()),
+    path("rating/", views.AddStarRatingView.as_view()),
+    ]
