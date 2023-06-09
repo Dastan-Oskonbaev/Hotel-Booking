@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Hotel, Review, Rating
+from .models import Review, Rating, RoomType
 
 
 class FilterReviewListSerializer(serializers.ListSerializer):
@@ -17,13 +17,13 @@ class RecursiveSerializer(serializers.Serializer):
         return serializer.data
 
 
-class HotelListSerializer(serializers.ModelSerializer):
+class RoomTypeListSerializer(serializers.ModelSerializer):
     """Список отелей"""
     rating_user = serializers.BooleanField()
     middle_star = serializers.IntegerField()
 
     class Meta:
-        model = Hotel
+        model = RoomType
         fields = ("id", "name", "rating_user", "middle_star")
 
 
@@ -45,12 +45,13 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "text", "children")
 
 
-class HotelDetailSerializer(serializers.ModelSerializer):
+class RoomTypeDetailSerializer(serializers.ModelSerializer):
     """Детальный вид отеля"""
     reviews = ReviewSerializer(many=True)
 
     class Meta:
-        model = Hotel
+        model = RoomType
+        fields = "__all__"
 
 
 class CreateRatingSerializer(serializers.ModelSerializer):
@@ -62,7 +63,7 @@ class CreateRatingSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         rating, _ = Rating.objects.update_or_create(
             ip=validated_data.get('ip', None),
-            movie=validated_data.get('hotel', None),
+            hotel=validated_data.get('hotel', None),
             defaults={'star': validated_data.get("star")}
         )
         return rating

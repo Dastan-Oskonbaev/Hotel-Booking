@@ -6,8 +6,8 @@ from . import views
 
 
 urlpatterns = [
-    path("hotel/", views.HotelListView.as_view()),
-    path("hotel/<int:pk>/", views.HotelDetailView.as_view()),
+    path("room_type/", views.RoomTypeListView.as_view()),
+    path("room_type/<int:pk>/", views.RoomTypeDetailView.as_view()),
     path("review/", views.ReviewCreateView.as_view()),
     path("rating/", views.AddStarRatingView.as_view()),
     ]

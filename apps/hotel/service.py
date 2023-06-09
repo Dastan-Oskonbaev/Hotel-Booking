@@ -1,6 +1,7 @@
-from django_filters import rest_framework as filters
-from .models import Hotel
 from django.db import models
+from django_filters import filters, FilterSet
+
+from .models import RoomType
 
 
 def get_client_ip(request):
@@ -17,13 +18,9 @@ class CharFilterInFilter(filters.BaseInFilter, filters.CharFilter):
     pass
 
 
-from django_filters import filters, FilterSet
-
-class HotelFilter(FilterSet):
-    # Ваши существующие определения фильтров
-
+class RoomTypeFilter(FilterSet):
     class Meta:
-        model = Hotel
+        model = RoomType
         fields = {
             'image': ['exact'],  # Добавлено переопределение для поля 'image'
         }

@@ -3,17 +3,17 @@ from django.contrib import admin
 
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
-from apps.hotel.models import Hotel, Room, RoomType, Review, Rating, RatingStar
+from apps.hotel.models import Room, RoomType, Review, Rating, RatingStar
 
 
-class HotelAdminForm(forms.ModelForm):
+class RoomTypeAdminForm(forms.ModelForm):
     description = forms.CharField(
         label="Description",
         widget=CKEditorUploadingWidget()
     )
 
     class Meta:
-        model = Hotel
+        model = RoomType
         fields = '__all__'
 
 
@@ -23,16 +23,11 @@ class ReviewInline(admin.TabularInline):
     readonly_fields = ("name", "email")
 
 
-@admin.register(Hotel)
-class HotelAdmin(admin.ModelAdmin):
-    list_display = (
-        'name',
-        'address',
-        'description',
-    )
+@admin.register(RoomType)
+class RoomTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description')
     inlines = [ReviewInline]
-    form = HotelAdminForm
-
+    form = RoomTypeAdminForm
 
 
 @admin.register(Room)
@@ -44,23 +39,15 @@ class RoomAdmin(admin.ModelAdmin):
 
     )
 
-
-@admin.register(RoomType)
-class RoomTypeAdmin(admin.ModelAdmin):
-    list_display = (
-        'name',
-        'description'
-    )
-
-
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ("name", "email", "parent", "hotel", "id")
+    list_display = ("name", "email", "parent", "room_type", "id")
     readonly_fields = ("name", "email")
 
 
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
-    list_display = ("star", "hotel", "ip")
+    list_display = ("star", 'room_type', "ip")
+
 
 admin.site.register(RatingStar)

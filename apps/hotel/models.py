@@ -68,12 +68,6 @@ class RoomType(models.Model):
 
 
 class Room(models.Model):
-    hotel = models.ForeignKey(
-        'Hotel',
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-    )
     room_type = models.ForeignKey(
         'RoomType',
         on_delete=models.CASCADE
@@ -94,7 +88,7 @@ class Room(models.Model):
     )
 
     def __str__(self):
-        return f"Room {self.room_number} at {self.hotel.name}"
+        return f"Room {self.room_number} at {self.room_type.name}"
 
     class Meta:
         verbose_name = _("Room")
@@ -126,15 +120,16 @@ class Rating(models.Model):
         on_delete=models.CASCADE,
         verbose_name='star'
     )
-    hotel = models.ForeignKey(
-        Hotel,
+    room_type = models.ForeignKey(
+        RoomType,
         on_delete=models.CASCADE,
-        verbose_name="hotel",
-        related_name="ratings"
+        verbose_name="room_type",
+        related_name="ratings",
+        default=0
     )
 
     def __str__(self):
-        return f"{self.star} - {self.hotel}"
+        return f"{self.star} - {self.room_type}"
 
     class Meta:
         verbose_name = _("Rating")
@@ -158,15 +153,16 @@ class Review(models.Model):
         blank=True, null=True,
         related_name="children"
     )
-    hotel = models.ForeignKey(
-        Hotel,
-        verbose_name="hotel",
+    room_type = models.ForeignKey(
+        RoomType,
+        verbose_name="room_type",
         on_delete=models.CASCADE,
-        related_name="reviews"
+        related_name="reviews",
+        default=None,
     )
 
     def __str__(self):
-        return f"{self.name} - {self.hotel}"
+        return f"{self.name} - {self.room_type}"
 
     class Meta:
         verbose_name = _('Review')
