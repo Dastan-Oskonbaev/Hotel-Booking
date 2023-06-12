@@ -1,11 +1,12 @@
 from django.contrib import admin
 
-from apps.accounts.models import User
+from . import models
 
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+@admin.register(models.AuthUser)
+class AuthUserAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'first_name',
         'last_name',
         'phone_number',
@@ -15,3 +16,4 @@ class UserAdmin(admin.ModelAdmin):
     exclude = (
         'password',
     )
+    list_display_links = ('email',)

@@ -58,7 +58,7 @@ class CreateRatingSerializer(serializers.ModelSerializer):
     """Добавление рейтинга пользователем"""
     class Meta:
         model = Rating
-        fields = ("star", "hotel")
+        fields = ("star", "room_type")
 
     def create(self, validated_data):
         rating, _ = Rating.objects.update_or_create(

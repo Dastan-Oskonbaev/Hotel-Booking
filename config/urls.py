@@ -16,13 +16,40 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+# from rest_framework_simplejwt.views import (
+#     TokenObtainPairView,
+#     TokenRefreshView,
+#     TokenVerifyView
+# )
 
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+#
+# auth_urlpatterns = [
+#
+#     path('api-auth/', include('rest_framework.urls')),
+#     path('auth/', include('djoser.urls')),
+#     path('auth/', include('djoser.urls.authtoken')),
+#     path('auth/', include('djoser.urls.jwt')),
+
+# ]
+
+swagger_urlpatterns = [
+    path('', SpectacularAPIView.as_view(), name='schema'),
+    path('swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+]
+
+api_v1_urlpatterns = [
+    path('schema/', include(swagger_urlpatterns)),
+    # path('token/', include(auth_urlpatterns)),
+    path('accounts-', include('apps.accounts.urls')),
+    path('booking', include('apps.booking.urls')),
+    path('hotel', include('apps.hotel.urls')),
+]
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls')),
+    path('api/v1/', include(api_v1_urlpatterns)),
     path('ckeditor/', include('ckeditor_uploader.urls')),
-    path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.authtoken')),
-    path('auth/', include('djoser.urls.jwt')),
-    path('api/v1/', include('apps.hotel.urls')),
+
 ]
+
