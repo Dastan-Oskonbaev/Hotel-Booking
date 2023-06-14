@@ -48,6 +48,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 class RoomTypeDetailSerializer(serializers.ModelSerializer):
     """Детальный вид отеля"""
     reviews = ReviewSerializer(many=True)
+    average_rating = serializers.FloatField(source='middle_star')
 
     class Meta:
         model = RoomType
@@ -61,9 +62,10 @@ class CreateRatingSerializer(serializers.ModelSerializer):
         fields = ("star", "room_type")
 
     def create(self, validated_data):
+        user = self.context['request'].user
         rating, _ = Rating.objects.update_or_create(
-            ip=validated_data.get('ip', None),
-            hotel=validated_data.get('hotel', None),
+            user=user,
+            room_type=validated_data.get('room_type', None),
             defaults={'star': validated_data.get("star")}
         )
         return rating

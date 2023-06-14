@@ -20,34 +20,60 @@ class RoomTypeAdminForm(forms.ModelForm):
 class ReviewInline(admin.TabularInline):
     model = Review
     extra = 1
-    readonly_fields = ("name", "email")
+    readonly_fields = (
+        "name",
+        "email"
+    )
+
+
+class RatingInline(admin.TabularInline):
+    model = Review
+    extra = 1
 
 
 @admin.register(RoomType)
 class RoomTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description')
-    inlines = [ReviewInline]
+    list_display = (
+        'id',
+        'name',
+        'description'
+    )
+    inlines = [ReviewInline, RatingInline]
     form = RoomTypeAdminForm
 
 
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'room_type',
         'room_number',
         'price',
 
     )
 
+
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ("name", "email", "parent", "room_type", "id")
-    readonly_fields = ("name", "email")
+    list_display = (
+        "name",
+        "email",
+        "parent",
+        "room_type",
+        "id"
+    )
+    readonly_fields = (
+        "name",
+        "email"
+    )
 
 
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
-    list_display = ("star", 'room_type', "ip")
+    list_display = (
+        "star",
+        'room_type',
+    )
 
 
 admin.site.register(RatingStar)

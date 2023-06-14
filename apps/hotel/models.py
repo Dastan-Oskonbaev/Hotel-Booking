@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 from django.utils.translation import gettext_lazy as _
@@ -111,9 +112,11 @@ class RatingStar(models.Model):
 
 
 class Rating(models.Model):
-    ip = models.CharField(
-        _('IP Address'),
-        max_length=15
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name=_("user"),
+        default=None
     )
     star = models.ForeignKey(
         RatingStar,
@@ -132,6 +135,7 @@ class Rating(models.Model):
         return f"{self.star} - {self.room_type}"
 
     class Meta:
+        unique_together = (("user", "room_type"),)
         verbose_name = _("Rating")
         verbose_name_plural = _("Ratings")
 
