@@ -2,10 +2,10 @@ from django.db import models
 from django.db.models import Avg
 from rest_framework import generics, permissions
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Review, Rating, RoomType
+from .models import Review, Rating, RoomType, Room
 from .serializers import ReviewCreateSerializer, CreateRatingSerializer, RoomTypeDetailSerializer, \
-    RoomTypeListSerializer
-from .service import  RoomTypeFilter
+    RoomTypeListSerializer, RoomSerializer
+from .service import RoomTypeFilter
 
 
 class RoomTypeListView(generics.ListAPIView):
@@ -33,11 +33,28 @@ class RoomTypeDetailView(generics.RetrieveAPIView):
         )
         return queryset
 
+
+class RoomListAPIView(generics.ListAPIView):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+
+    def get_queryset(self):
+        check_in_date = self.request.query_params.get('check_in_date')
+        check_out_date = self.request.query_params.get('check_out_date')
+
+        if check_in_date and check_out_date:
+            return Room.objects.exclude(
+                booking__check_out_date__gte=check_in_date,
+                booking__check_in_date__lte=check_out_date
+            )
+        return Room.objects.all()
+
+
 class ReviewCreateView(generics.CreateAPIView):
     """Добавление отзыва к отелю"""
     serializer_class = ReviewCreateSerializer
     queryset = Review.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class AddStarRatingView(generics.CreateAPIView):

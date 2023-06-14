@@ -22,7 +22,6 @@ class ReviewInline(admin.TabularInline):
     extra = 1
     readonly_fields = (
         "name",
-        "email"
     )
 
 
@@ -57,14 +56,12 @@ class RoomAdmin(admin.ModelAdmin):
 class ReviewAdmin(admin.ModelAdmin):
     list_display = (
         "name",
-        "email",
         "parent",
         "room_type",
         "id"
     )
     readonly_fields = (
         "name",
-        "email"
     )
 
 

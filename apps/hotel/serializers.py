@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Review, Rating, RoomType
+from .models import Review, Rating, RoomType, Room
 
 
 class FilterReviewListSerializer(serializers.ListSerializer):
@@ -33,6 +33,16 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = "__all__"
+        extra_kwargs = {
+            'parent': {'required': False}
+        }
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data['name'] = user.get_full_name() or user.username
+        validated_data['email'] = user.email
+        review = Review.objects.create(**validated_data)
+        return review
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -69,3 +79,9 @@ class CreateRatingSerializer(serializers.ModelSerializer):
             defaults={'star': validated_data.get("star")}
         )
         return rating
+
+
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = ['id', 'room_type', 'room_number', 'price', 'is_available', 'is_booked']

@@ -1,7 +1,6 @@
-from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions
 from .serializers import BookingSerializer
 from .models import Booking
 
@@ -9,6 +8,7 @@ from .models import Booking
 class BookingCreateViewSet(ModelViewSet):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
+    permission_classes = [permissions.AllowAny]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
