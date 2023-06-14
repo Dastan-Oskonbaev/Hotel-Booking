@@ -16,22 +16,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-# from rest_framework_simplejwt.views import (
-#     TokenObtainPairView,
-#     TokenRefreshView,
-#     TokenVerifyView
-# )
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
-#
-# auth_urlpatterns = [
-#
-#     path('api-auth/', include('rest_framework.urls')),
-#     path('auth/', include('djoser.urls')),
-#     path('auth/', include('djoser.urls.authtoken')),
-#     path('auth/', include('djoser.urls.jwt')),
 
-# ]
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView
+)
+
+auth_urlpatterns = [
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+
+]
 
 swagger_urlpatterns = [
     path('', SpectacularAPIView.as_view(), name='schema'),
@@ -41,10 +40,10 @@ swagger_urlpatterns = [
 
 api_v1_urlpatterns = [
     path('schema/', include(swagger_urlpatterns)),
-    # path('token/', include(auth_urlpatterns)),
+    path('token/', include(auth_urlpatterns)),
+    path('booking-', include('apps.booking.urls')),
+    path('hotel-', include('apps.hotel.urls')),
     path('accounts-', include('apps.accounts.urls')),
-    path('booking', include('apps.booking.urls')),
-    path('hotel', include('apps.hotel.urls')),
 ]
 urlpatterns = [
     path('admin/', admin.site.urls),
