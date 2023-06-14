@@ -1,9 +1,12 @@
 from django import forms
 from django.contrib import admin
 
+from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy as _
+
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
-from apps.hotel.models import Room, RoomType, Review, Rating, RatingStar
+from apps.hotel.models import Room, RoomType, Review, Rating, RatingStar, RoomTypePhotos
 
 
 class RoomTypeAdminForm(forms.ModelForm):
@@ -15,6 +18,17 @@ class RoomTypeAdminForm(forms.ModelForm):
     class Meta:
         model = RoomType
         fields = '__all__'
+
+
+class RoomTypePhotosInline(admin.TabularInline):
+    model = RoomTypePhotos
+    extra = 1
+    readonly_fields = ('get_image',)
+
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.image.url} width="100" height= "110"')
+
+    get_image.short_description = _("Image")
 
 
 class ReviewInline(admin.TabularInline):
@@ -37,8 +51,12 @@ class RoomTypeAdmin(admin.ModelAdmin):
         'name',
         'description'
     )
-    inlines = [ReviewInline, RatingInline]
+    save_on_top = True
+    inlines = [ReviewInline, RatingInline, RoomTypePhotosInline]
     form = RoomTypeAdminForm
+
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.image.url} width="100" height="110"')
 
 
 @admin.register(Room)
@@ -71,6 +89,17 @@ class RatingAdmin(admin.ModelAdmin):
         "star",
         'room_type',
     )
+
+
+@admin.register(RoomTypePhotos)
+class MovieShotsAdmin(admin.ModelAdmin):
+    list_display = ("title", "movie", "get_image")
+    readonly_fields = ("get_image",)
+
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.image.url} width="50" height="60"')
+
+    get_image.short_description = "Изображение"
 
 
 admin.site.register(RatingStar)

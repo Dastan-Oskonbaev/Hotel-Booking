@@ -68,6 +68,25 @@ class RoomType(models.Model):
         verbose_name_plural = _("Room Types")
 
 
+class RoomTypePhotos(models.Model):
+    image = models.ImageField(
+        _('Room Type Photo'),
+        upload_to='room_photos/'
+    )
+    room_type = models.ForeignKey(
+        RoomType,
+        verbose_name='RoomType',
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return self.room_type.name
+
+    class Meta:
+        verbose_name = _('Room Type Photo')
+        verbose_name_plural = _('Room Type Photos')
+
+
 class Room(models.Model):
     room_type = models.ForeignKey(
         'RoomType',
