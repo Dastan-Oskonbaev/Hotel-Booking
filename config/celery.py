@@ -10,9 +10,9 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
-    'send_email_task': {
-        'task': 'apps.shop.tasks.send_email_task',
-        'schedule': 10.0,
+    'check-checkout-dates-every-day': {
+        'task': 'apps.shop.tasks.check-checkout-dates-every-day',
+        'schedule': crontab(hour=0, minute=0),
         'kwargs': {},
     }
 }

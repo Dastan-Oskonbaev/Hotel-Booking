@@ -19,6 +19,7 @@ class BookingCreateViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(
-            guest=self.request.user,
+            user=self.request.user,
+
         )
 

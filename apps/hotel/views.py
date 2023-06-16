@@ -3,32 +3,30 @@ from django.db.models import Avg
 from rest_framework import generics, permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Review, Rating, RoomType, Room
-from .serializers import ReviewCreateSerializer, CreateRatingSerializer, RoomTypeDetailSerializer, \
-    RoomTypeListSerializer, RoomSerializer
-from .service import RoomTypeFilter
+from .serializers import ReviewCreateSerializer, CreateRatingSerializer, RoomDetailSerializer, \
+    RoomListSerializer, RoomSerializer
 
 
-class RoomTypeListView(generics.ListAPIView):
+class RoomListView(generics.ListAPIView):
     """Вывод списка типов комнат"""
-    serializer_class = RoomTypeListSerializer
+    serializer_class = RoomListSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_class = RoomTypeFilter
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        queryset = RoomType.objects.annotate(
+        queryset = Room.objects.annotate(
             middle_star=Avg('ratings__star')
         )
         return queryset
 
 
-class RoomTypeDetailView(generics.RetrieveAPIView):
+class RoomDetailView(generics.RetrieveAPIView):
     """Детальный вывод типа комнаты"""
-    queryset = RoomType.objects.filter()
-    serializer_class = RoomTypeDetailSerializer
+    queryset = Room.objects.filter()
+    serializer_class = RoomDetailSerializer
 
     def get_queryset(self):
-        queryset = RoomType.objects.annotate(
+        queryset = Room.objects.annotate(
             middle_star=Avg('ratings__star')
         )
         return queryset
@@ -64,9 +62,9 @@ class AddStarRatingView(generics.CreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def perform_create(self, serializer):
-        serializer.save(room_type=self.get_room_type())
+        serializer.save(room=self.get_room())
 
-    def get_room_type(self):
+    def get_room(self):
         room_id = self.kwargs.get('room_id')
-        room_type = RoomType.objects.get(id=room_id)
-        return room_type
+        room = Room.objects.get(id=room_id)
+        return room

@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.mail import send_mail
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class CustomUser(AbstractUser):
@@ -25,11 +26,11 @@ class CustomUser(AbstractUser):
         unique=True
 
     )
-    phone_number = models.CharField(
+    phone_number = PhoneNumberField(
         _("phone number"),
-        max_length=50,
+        null=True,
         blank=True,
-        null=True
+        default=None,
     )
 
     objects = UserManager()

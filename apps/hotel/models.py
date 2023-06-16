@@ -53,12 +53,6 @@ class RoomType(models.Model):
         blank=True,
         null=True,
     )
-    image = models.ImageField(
-        _("Room_Image"),
-        upload_to="rooms/",
-        null=True,
-        blank=True,
-    )
 
     def __str__(self):
         return self.name
@@ -66,25 +60,6 @@ class RoomType(models.Model):
     class Meta:
         verbose_name = _("Room Type")
         verbose_name_plural = _("Room Types")
-
-
-class RoomTypePhotos(models.Model):
-    image = models.ImageField(
-        _('Room Type Photo'),
-        upload_to='room_photos/'
-    )
-    room_type = models.ForeignKey(
-        RoomType,
-        verbose_name='RoomType',
-        on_delete=models.CASCADE
-    )
-
-    def __str__(self):
-        return self.room_type.name
-
-    class Meta:
-        verbose_name = _('Room Type Photo')
-        verbose_name_plural = _('Room Type Photos')
 
 
 class Room(models.Model):
@@ -102,10 +77,6 @@ class Room(models.Model):
     price = models.PositiveIntegerField(
         _("Price"),
     )
-    is_available = models.BooleanField(
-        _("Is Available"),
-        default=True
-    )
     is_booked = models.BooleanField(
         _("Is Booked"),
         default=False
@@ -119,8 +90,24 @@ class Room(models.Model):
         verbose_name_plural = _("Rooms")
 
 
+class RoomPhotos(models.Model):
+    image = models.ImageField(
+        _('Room Photo'),
+        upload_to='room_photos/'
+    )
+    room = models.ForeignKey(
+        Room,
+        verbose_name='Room',
+        on_delete=models.CASCADE
+    )
+
+    class Meta:
+        verbose_name = _('Room Photo')
+        verbose_name_plural = _('Room Photos')
+
+
 class RatingStar(models.Model):
-    value = models.SmallIntegerField(
+    value = models.PositiveSmallIntegerField(
         _('Value'),
         default=0
     )
@@ -146,19 +133,19 @@ class Rating(models.Model):
         on_delete=models.CASCADE,
         verbose_name='star'
     )
-    room_type = models.ForeignKey(
-        RoomType,
+    room = models.ForeignKey(
+        Room,
         on_delete=models.CASCADE,
-        verbose_name="room_type",
+        verbose_name="room",
         related_name="ratings",
         default=0
     )
 
     def __str__(self):
-        return f"{self.star} - {self.room_type}"
+        return f"{self.star} - {self.room}"
 
     class Meta:
-        unique_together = (("user", "room_type"),)
+        unique_together = (("user", "room"),)
         verbose_name = _("Rating")
         verbose_name_plural = _("Ratings")
 
@@ -184,16 +171,16 @@ class Review(models.Model):
         null=True,
         related_name="children",
     )
-    room_type = models.ForeignKey(
-        RoomType,
-        verbose_name="room_type",
+    room = models.ForeignKey(
+        Room,
+        verbose_name="room",
         on_delete=models.CASCADE,
         related_name="reviews",
         default=None,
     )
 
     def __str__(self):
-        return f"{self.name} - {self.room_type}"
+        return f"{self.name} - {self.room}"
 
     class Meta:
         verbose_name = _('Review')
