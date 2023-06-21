@@ -17,3 +17,5 @@ python-decouple==3.8
 redis==4.5.5
 django-phonenumber-field==7.1.0
 phonenumbers==8.13.14
+psycopg2-binary==2.9.6
+djangorestframework-simplejwt==5.2.2

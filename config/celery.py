@@ -8,11 +8,11 @@ app = Celery("config")
 
 app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()
-
-app.conf.beat_schedule = {
-    'check-checkout-dates-every-day': {
-        'task': 'apps.shop.tasks.check-checkout-dates-every-day',
-        'schedule': crontab(hour=0, minute=0),
-        'kwargs': {},
-    }
-}
+#
+# app.conf.beat_schedule = {
+#     'check-checkout-dates-every-day': {
+#         'task': 'apps.shop.tasks.check-checkout-dates-every-day',
+#         'schedule': crontab(hour=0, minute=0),
+#         'kwargs': {},
+#     }
+# }
