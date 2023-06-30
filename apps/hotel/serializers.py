@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Review, Rating, RoomType, Room
+from .models import Review, Rating, Room
 
 
 class FilterReviewListSerializer(serializers.ListSerializer):
@@ -21,10 +21,16 @@ class RoomListSerializer(serializers.ModelSerializer):
     """Список отелей"""
     rating_user = serializers.BooleanField()
     middle_star = serializers.IntegerField()
+    image_url = serializers.SerializerMethodField()
+
+    def get_image_url(self, room):
+        if room.image:
+            return self.context['request'].build_absolute_uri(room.image.url)
+        return None
 
     class Meta:
         model = Room
-        fields = ("id", "rating_user", "middle_star")
+        fields = ('id', 'room_number', 'price', 'room_type', 'is_booked', "image_url", "rating_user", "middle_star")
 
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
@@ -82,6 +88,12 @@ class CreateRatingSerializer(serializers.ModelSerializer):
 
 
 class RoomSerializer(serializers.ModelSerializer):
+    room_type_name = serializers.ReadOnlyField(source='room_type.name')
+    room_type_description = serializers.ReadOnlyField(source='room_type.description')
+
+    def create(self, validated_data):
+        room = Room.objects.create(**validated_data)
+        return room
     class Meta:
         model = Room
-        fields = ['id', 'room_type', 'room_number', 'price', 'is_booked']
+        fields = ['id', 'room_type', 'room_number', 'price', 'is_booked', 'room_type_name', 'room_type_description']

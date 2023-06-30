@@ -70,7 +70,6 @@ class RoomAdmin(admin.ModelAdmin):
         'room_number',
         'price',
         'is_booked',
-
     )
     save_on_top = True
     inlines = [RoomPhotosInline, ReviewInline, RatingInline, ]

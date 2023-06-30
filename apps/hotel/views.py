@@ -1,10 +1,13 @@
 from django.db import models
 from django.db.models import Avg
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.response import Response
+
 from .models import Review, Rating, RoomType, Room
 from .serializers import ReviewCreateSerializer, CreateRatingSerializer, RoomDetailSerializer, \
     RoomListSerializer, RoomSerializer
+from django.utils import timezone
 
 
 class RoomListView(generics.ListAPIView):
@@ -24,6 +27,7 @@ class RoomDetailView(generics.RetrieveAPIView):
     """Детальный вывод типа комнаты"""
     queryset = Room.objects.filter()
     serializer_class = RoomDetailSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         queryset = Room.objects.annotate(
@@ -44,7 +48,8 @@ class RoomListAPIView(generics.ListAPIView):
             return Room.objects.exclude(
                 booking__check_out_date__gte=check_in_date,
                 booking__check_in_date__lte=check_out_date
-            )
+            ).filter(booking__check_out_date__gte=timezone.now())
+
         return Room.objects.all()
 
 
